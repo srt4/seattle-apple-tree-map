@@ -1,0 +1,5 @@
+.DS_Store
+*.pyc
+StatePlane
+resources
+WGS84
