@@ -17,6 +17,7 @@ sudo pip install pyshp
 echo "Checking for shape files"
 if [ ! -d "resources/StatePlane" ]; then
   echo "No shapefiles found, fetching from data.seattle.gov"
+  mkdir -p resources
   curl -L https://data.seattle.gov/download/xg4t-j322/application%2Fzip > resources/shapefile.zip
   cd resources
   unzip shapefile.zip
