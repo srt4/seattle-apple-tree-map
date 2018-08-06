@@ -1,6 +1,7 @@
 import shapefile
 import json
 from flask import Flask, render_template
+from tree import Tree
 
 app = Flask(__name__)
 
@@ -32,33 +33,17 @@ def get_trees():
 
     ## TODO: convert the array index of the shape record into a key/value map
     for shape in shapes:
-        # common name: index 34
-        # address: index 5
-        # latitude: index 44
-        # longitude: index 43
-        # tree state: index 9: one of [INSVC, REMOVED]
-        commonName = shape.record[34]
-        address = shape.record[5]
-        latitude = shape.record[44]
-        longitude = shape.record[43]
-        treeState = shape.record[9]
-
+        tree = Tree(shape.record)
         ## TODO: make this configurable and modifiable with request args
-        if ('Apple' in commonName \
-            or 'apple' in commonName) \
-            and not is_crabby(commonName) \
-            and not is_service_berry(commonName) \
-            and 'INSVC' in treeState:
-            trees.append({
-                'commonName': commonName,
-                'address': address,
-                'latitude': latitude,
-                'longitude': longitude,
-                'state': treeState,
-                'verboseDetails': shape.record
-            })
+        treeType = tree.commonName
+        if ('Apple' in treeType \
+            or 'apple' in treeType) \
+            and not is_crabby(treeType) \
+            and not is_service_berry(treeType) \
+            and 'INSVC' == tree.currentStatus:
+            trees.append(tree.__dict__)
     print "Found " + str(len(trees)) + " fruitful trees"
-    
+
     return trees
 
 def is_crabby(commonName):
